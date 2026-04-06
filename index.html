@@ -1,0 +1,839 @@
+﻿<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body,div{font-family:var(--font-sans,system-ui,sans-serif);}
+.app{background:#fff;min-height:100vh;}
+.hdr{background:#1B2A4A;color:#fff;padding:12px 20px;display:flex;align-items:center;gap:10px;}
+.hdr-ico{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.hdr h1{font-size:15px;font-weight:500;margin:0;}
+.hdr p{font-size:10px;opacity:0.7;margin:0;}
+.tabs{display:flex;border-bottom:1px solid #E5E7EB;background:#F9FAFB;}
+.tab{padding:10px 22px;font-size:12px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;color:#6B7280;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;}
+.tab.on{color:#1B2A4A;border-bottom-color:#1B2A4A;background:#fff;}
+.tab-c{display:none;}.tab-c.on{display:block;}
+.ibar{padding:12px 16px;background:#F9FAFB;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.iwrap{flex:1;min-width:200px;display:flex;align-items:center;background:#fff;border:1px solid #D1D5DB;border-radius:8px;overflow:hidden;}
+.iwrap input{flex:1;padding:8px 10px;font-size:13px;font-family:monospace;border:none;outline:none;}
+.ilbl{padding:0 10px;font-size:11px;color:#9CA3AF;font-style:italic;white-space:nowrap;}
+.btn{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid #D1D5DB;background:#fff;color:#374151;transition:all 0.12s;}
+.btn:hover{background:#F3F4F6;}
+.btnp{background:#1B2A4A;color:#fff;border-color:#1B2A4A;}
+.btnp:hover{background:#243660;}
+.btns{padding:4px 10px;font-size:11px;}
+.btnpar{background:#FEF3C7;color:#92400E;border-color:#FCD34D;}
+.btnpar:hover{background:#FDE68A;}
+.syms{display:flex;gap:4px;flex-wrap:wrap;}
+.sym{padding:5px 10px;border-radius:6px;font-size:13px;font-family:monospace;cursor:pointer;border:1px solid #D1D5DB;background:#fff;color:#1B2A4A;font-weight:500;transition:all 0.12s;}
+.sym:hover{background:#EEF2FF;border-color:#6366F1;}
+.err{color:#DC2626;font-size:11px;padding:4px 16px;min-height:18px;}
+.tbar{display:flex;align-items:center;gap:8px;padding:6px 16px;border-bottom:1px solid #E5E7EB;background:#F9FAFB;flex-wrap:wrap;}
+.tlbl{font-size:11px;color:#6B7280;font-weight:500;}
+.topt{padding:3px 10px;border-radius:12px;font-size:11px;cursor:pointer;border:1px solid #D1D5DB;background:#fff;color:#374151;transition:all 0.12s;}
+.topt.on{background:#1B2A4A;color:#fff;border-color:#1B2A4A;}
+.ntog{display:flex;align-items:center;gap:3px;background:#F3F4F6;border-radius:20px;padding:2px;border:1px solid #E5E7EB;}
+.nopt{padding:3px 11px;border-radius:16px;font-size:11px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#6B7280;transition:all 0.15s;font-family:monospace;}
+.nopt.on{background:#fff;color:#1B2A4A;box-shadow:0 1px 3px rgba(0,0,0,0.12);}
+.dvd{width:1px;height:16px;background:#E5E7EB;}
+.tt-wrap{padding:12px 16px;overflow-x:auto;}
+.tt{border-collapse:collapse;font-size:12px;font-family:monospace;min-width:100%;}
+.tt th{padding:8px 12px;background:#1B2A4A;color:#fff;font-weight:500;text-align:center;font-family:var(--font-sans);font-size:11px;border:1px solid #2D3F6A;white-space:nowrap;}
+.tt th.vc{background:#2D3F6A;}.tt th.sc{background:#374785;}.tt th.mc{background:#16A34A;}
+.tt td{padding:7px 12px;text-align:center;border:1px solid #E5E7EB;}
+.tt tr:nth-child(even) td{background:#F9FAFB;}
+.tt tr:hover td{background:#EEF2FF;}
+.vT{color:#16A34A;font-weight:500;}.vF{color:#DC2626;}
+.tbadge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:500;margin-left:8px;}
+.tbT{background:#DCFCE7;color:#166534;}.tbF{background:#FEF2F2;color:#991B1B;}.tbC{background:#FEF9C3;color:#854D0E;}
+/* Proof layout */
+.plo{display:flex;height:calc(100vh - 164px);min-height:460px;}
+.pleft{flex:1;min-width:0;border-right:1px solid #E5E7EB;display:flex;flex-direction:column;overflow-y:auto;}
+.pright{width:260px;display:flex;flex-direction:column;overflow:hidden;}
+.psteps{flex:none;overflow:visible;padding:12px 14px 8px;display:flex;flex-direction:column;gap:8px;}
+.scard{border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;background:#fff;}
+.scard.on{border-color:#6366F1;background:#F5F5FF;}
+.snum{font-size:10px;color:#9CA3AF;font-weight:500;margin-bottom:2px;}
+.slaw{font-size:10px;color:#6B7280;font-style:italic;margin-bottom:6px;}
+/* Token-based expression */
+.tokexd{font-size:20px;font-family:'Georgia','Times New Roman',serif;line-height:2;padding:6px 2px;cursor:default;user-select:none;outline:none;}
+.tok{display:inline;padding:1px 0;cursor:pointer;border-radius:2px;transition:background 0.08s;}
+.tok:hover{background:rgba(99,102,241,0.08);}
+/* Token types */
+.tvar{font-style:italic;color:#1B2A4A;}
+.tuop{color:#374151;}                /* ¬  — unary prefix */
+.tbop{color:#374151;padding:0 4px;}  /* ∧ ∨ → ↔ — binary */
+.tpar{color:#9CA3AF;}                /* ( )  auto or PAREN */
+.tbrk{color:#9CA3AF;}                /* [ ]  impl/bicond */
+.tcon1{color:#16A34A;font-weight:600;}
+.tcon0{color:#DC2626;font-weight:600;}
+/* Selection underline */
+.tok-sel{text-decoration:underline;text-decoration-color:#A5B4FC;text-decoration-thickness:2px;text-underline-offset:6px;}
+.tok-exact{text-decoration:underline;text-decoration-color:#F59E0B;text-decoration-thickness:3px;text-underline-offset:6px;background:rgba(254,249,195,0.55);border-radius:2px;}
+.tok-rg{text-decoration:underline;text-decoration-color:#0284C7;text-decoration-thickness:2px;text-underline-offset:6px;background:rgba(224,242,254,0.4);border-radius:2px;}
+/* Selection controls bar */
+.selbar{display:flex;align-items:center;gap:5px;padding:7px 2px 2px;margin-top:2px;border-top:1px dashed #E5E7EB;min-height:36px;}
+.selbtn{width:26px;height:26px;border-radius:6px;border:1px solid #D1D5DB;background:#fff;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:all 0.12s;flex-shrink:0;line-height:1;}
+.selbtn:hover:not(:disabled){background:#EEF2FF;border-color:#6366F1;}
+.selbtn:disabled{opacity:0.25;cursor:not-allowed;}
+.selinfo{font-size:11px;color:#9CA3AF;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.selinfo.valid{color:#B45309;font-weight:500;}
+.selinfo.partial{color:#6B7280;}
+.selinfo.rg{color:#0369A1;font-weight:500;}
+.rgbtn{padding:2px 9px;font-size:10px;border-radius:5px;border:1px solid #0284C7;background:#F0F9FF;cursor:pointer;color:#0369A1;white-space:nowrap;font-weight:500;transition:all 0.12s;}
+.rgbtn:hover{background:#E0F2FE;border-color:#0369A1;}
+.snapbtn{padding:2px 9px;font-size:10px;border-radius:5px;border:1px solid #D1D5DB;background:#fff;cursor:pointer;color:#6B7280;white-space:nowrap;transition:all 0.12s;}
+.snapbtn:hover{border-color:#6366F1;color:#4338CA;}
+/* Laws panel */
+.lhdr{padding:10px 12px;font-size:11px;font-weight:500;color:#374151;border-bottom:1px solid #E5E7EB;background:#F9FAFB;display:flex;align-items:center;justify-content:space-between;}
+.llist{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:3px;}
+.lbtn{padding:7px 9px;border-radius:7px;border:1px solid #E5E7EB;background:#fff;cursor:pointer;text-align:left;transition:all 0.12s;width:100%;}
+.lbtn:hover{border-color:#6366F1;background:#EEF2FF;}
+.lbtn.ap{border-color:#6366F1;background:#EEF2FF;}
+.lbtn.sg{border-color:#16A34A;background:#F0FDF4;}
+.lbtn.sg::before{content:"★ ";color:#16A34A;font-size:10px;}
+.lname{font-size:11px;font-weight:500;color:#1B2A4A;margin-bottom:2px;}
+.lrule{font-size:10px;color:#6B7280;overflow-x:auto;}
+.sugbtn{padding:4px 9px;font-size:10px;border-radius:5px;border:1px solid #16A34A;background:#F0FDF4;color:#166534;cursor:pointer;font-weight:500;}
+.sugbtn:hover{background:#DCFCE7;}
+.lsep{font-size:9px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;padding:6px 9px 2px;}
+.pctrl{padding:8px 12px;border-top:1px solid #E5E7EB;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.pgoal{padding:6px 14px;background:#F9FAFB;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.pglbl{font-size:10px;color:#9CA3AF;font-weight:500;}
+.pgexp{font-size:12px;overflow-x:auto;}
+.sbanner{padding:10px 14px;border-radius:8px;margin:6px 0;font-size:12px;font-weight:500;text-align:center;border:1px solid;}
+.imsg{padding:8px 14px;font-size:11px;color:#6B7280;text-align:center;}
+.oldexd{font-size:16px;font-family:'Georgia','Times New Roman',serif;line-height:1.8;padding:4px 2px;opacity:0.55;letter-spacing:0.3px;}
+.oldexd .ov{font-style:italic;color:#1B2A4A;}
+.oldexd .oo{color:#374151;padding:0 4px;}
+.oldexd .op_{color:#9CA3AF;}
+</style>
+
+<div class="app">
+<div class="hdr">
+  <div class="hdr-ico">⊢</div>
+  <div><h1>Lógica Matemática — Explorador</h1><p>Tabla de verdad &amp; Demostración paso a paso</p></div>
+</div>
+<div class="ibar">
+  <div class="iwrap"><span class="ilbl">p,q,r:</span><input type="text" id="exi" value="(p → q) ∧ ¬q → ¬p"/></div>
+  <div class="syms">
+    <button class="sym" onclick="ins('¬')">¬</button>
+    <button class="sym" onclick="ins('∧')">∧</button>
+    <button class="sym" onclick="ins('∨')">∨</button>
+    <button class="sym" onclick="ins('→')">→</button>
+    <button class="sym" onclick="ins('↔')">↔</button>
+    <button class="sym" onclick="ins('(')">( )</button>
+  </div>
+  <button class="btn btnp" onclick="go()">Evaluar</button>
+</div>
+<div id="em" class="err"></div>
+<div class="tabs">
+  <button class="tab on" onclick="stab('tt',this)">Tabla de verdad</button>
+  <button class="tab" onclick="stab('pf',this)">Demostración paso a paso</button>
+</div>
+
+<div id="tab-tt" class="tab-c on">
+  <div class="tbar">
+    <span class="tlbl">Columnas:</span>
+    <button class="topt on" id="tf" onclick="setTog('full')">Variables + subexpresiones</button>
+    <button class="topt" id="ts" onclick="setTog('simple')">Solo resultado</button>
+    <div class="dvd"></div>
+    <span class="tlbl">Notación:</span>
+    <div class="ntog">
+      <button class="nopt on" id="nvf" onclick="setN('vf')">V / F</button>
+      <button class="nopt" id="n10" onclick="setN('10')">1 / 0</button>
+    </div>
+    <span id="tbadge"></span>
+  </div>
+  <div id="ttwrap" class="tt-wrap"></div>
+</div>
+
+<div id="tab-pf" class="tab-c">
+  <div class="plo">
+    <div class="pleft">
+      <div class="pgoal">
+        <span class="pglbl">Base:</span><span class="pgexp" id="pgex"></span>
+        <span class="pglbl" style="margin-left:auto;">Objetivo:</span>
+        <input type="text" id="goali" placeholder="p.ej. ¬p ∨ ¬q" style="width:140px;font-size:11px;padding:3px 7px;border-radius:5px;border:1px solid #D1D5DB;"/>
+      </div>
+      <div class="psteps" id="psteps"></div>
+      <div class="pctrl">
+        <button class="btn btns" onclick="undo()">↩ Deshacer</button>
+        <button class="btn btns" onclick="reset()">↺ Reiniciar</button>
+        <button class="btn btns btnpar" id="parbtn" style="display:none;" onclick="addParen()">( ) Paréntesis</button>
+        <button class="btn btns btnp" onclick="chkGoal()">✓ Verificar</button>
+      </div>
+    </div>
+    <div class="pright">
+      <div class="lhdr"><span>Equivalencias lógicas</span><button class="sugbtn" onclick="suggest()">★ Sugerir</button></div>
+      <div class="llist" id="llist"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ── Global state ── */
+var showFull=true,useVF=true,AST=null,steps=[],sugId=null,sugMode=false;
+var selStart=null,selEnd=null,selKey=null;  /* selKey = derived from exact match */
+var CUR_TOKENS=[],CUR_RANGES={},CUR_RANGE_LIST=[]; /* token data for current last step */
+var reagruparCandidate=null;               /* {node,key,lawId} when selection crosses assoc boundary */
+
+var PREC={BICOND:1,IMPL:2,OR:3,AND:4,NOT:5,VAR:9,TRUE:9,FALSE:9,PAREN:9};
+
+function isAt(n){return!n||n.op==='VAR'||n.op==='TRUE'||n.op==='FALSE';}
+function up(n){while(n&&n.op==='PAREN')n=n.inner;return n;}
+function needP(pop,cn,side){
+  if(!cn||isAt(cn))return false;
+  if(cn.op==='PAREN')return false;
+  var cp=PREC[cn.op]||0,pp=PREC[pop]||0;
+  if(cp<pp)return true;
+  if(cp===pp&&side==='right'&&pop!=='IMPL'&&pop!=='BICOND')return true;
+  return false;
+}
+
+/* ── Laws ── */
+var LAWS=[
+  {id:"impl",nm:"Implicación",ltx:"[A]\\to[B]\\equiv\\neg A\\vee B",cat:"Implicación",
+   m:function(n){return n.op==='IMPL';},
+   a:function(n){return{op:'OR',left:{op:'NOT',arg:n.left},right:n.right};}},
+  {id:"impl_r",nm:"Implicación (inversa)",ltx:"\\neg A\\vee B\\equiv[A]\\to[B]",cat:"Implicación",
+   m:function(n){return n.op==='OR'&&n.left&&n.left.op==='NOT';},
+   a:function(n){return{op:'IMPL',left:n.left.arg,right:n.right};}},
+  {id:"bic",nm:"Bicondicional",ltx:"[A]\\leftrightarrow[B]\\equiv([A]\\to[B])\\wedge([B]\\to[A])",cat:"Implicación",
+   m:function(n){return n.op==='BICOND';},
+   a:function(n){return{op:'AND',left:{op:'IMPL',left:n.left,right:n.right},right:{op:'IMPL',left:n.right,right:n.left}};}},
+  {id:"bic_r",nm:"Bicondicional (inversa)",ltx:"([A]\\to[B])\\wedge([B]\\to[A])\\equiv[A]\\leftrightarrow[B]",cat:"Implicación",
+   m:function(n){return n.op==='AND'&&n.left&&n.left.op==='IMPL'&&n.right&&n.right.op==='IMPL'&&s(n.left.left)===s(n.right.right)&&s(n.left.right)===s(n.right.left);},
+   a:function(n){return{op:'BICOND',left:n.left.left,right:n.left.right};}},
+  {id:"dm1",nm:"De Morgan (¬∧)",ltx:"\\neg(A\\wedge B)\\equiv\\neg A\\vee\\neg B",cat:"Negación",
+   m:function(n){var a=n&&n.op==='NOT'?up(n.arg):null;return !!(a&&(a.op==='AND'||a.op==='OR'));},
+   a:function(n){var a=up(n.arg),out=a.op==='AND'?'OR':'AND';return{op:out,left:{op:'NOT',arg:a.left},right:{op:'NOT',arg:a.right}};}},
+  {id:"dm2",nm:"De Morgan (¬∨)",ltx:"\\neg(A\\vee B)\\equiv\\neg A\\wedge\\neg B",cat:"Negación",
+   m:function(n){var a=n&&n.op==='NOT'?up(n.arg):null;return !!(a&&(a.op==='AND'||a.op==='OR'));},
+   a:function(n){var a=up(n.arg),out=a.op==='AND'?'OR':'AND';return{op:out,left:{op:'NOT',arg:a.left},right:{op:'NOT',arg:a.right}};}},
+  {id:"dm1r",nm:"De Morgan (¬∧ inv.)",ltx:"\\neg A\\vee\\neg B\\equiv\\neg(A\\wedge B)",cat:"Negación",
+   m:function(n){var l=up(n.left),r=up(n.right);return(n.op==='OR'||n.op==='AND')&&l&&l.op==='NOT'&&r&&r.op==='NOT';},
+   a:function(n){var l=up(n.left),r=up(n.right),inOp=n.op==='OR'?'AND':'OR';return{op:'NOT',arg:{op:inOp,left:l.arg,right:r.arg}};}},
+  {id:"dm2r",nm:"De Morgan (¬∨ inv.)",ltx:"\\neg A\\wedge\\neg B\\equiv\\neg(A\\vee B)",cat:"Negación",
+   m:function(n){var l=up(n.left),r=up(n.right);return(n.op==='OR'||n.op==='AND')&&l&&l.op==='NOT'&&r&&r.op==='NOT';},
+   a:function(n){var l=up(n.left),r=up(n.right),inOp=n.op==='OR'?'AND':'OR';return{op:'NOT',arg:{op:inOp,left:l.arg,right:r.arg}};}},
+  {id:"dn",nm:"Doble negación",ltx:"\\neg\\neg A\\equiv A",cat:"Negación",
+   m:function(n){var a=n&&n.op==='NOT'?up(n.arg):null;return !!(a&&a.op==='NOT');},
+   a:function(n){var a=up(n.arg);return a.arg;}},
+  {id:"ca",nm:"Conmutatividad (∧)",ltx:"A\\wedge B\\equiv B\\wedge A",cat:"Conmutatividad",
+   m:function(n){return n.op==='AND';},
+   a:function(n){return{op:'AND',left:n.right,right:n.left};}},
+  {id:"co",nm:"Conmutatividad (∨)",ltx:"A\\vee B\\equiv B\\vee A",cat:"Conmutatividad",
+   m:function(n){return n.op==='OR';},
+   a:function(n){return{op:'OR',left:n.right,right:n.left};}},
+  {id:"asa_r",nm:"Asociatividad (∧) A∧(B∧C)",ltx:"A\\wedge(B\\wedge C)\\equiv(A\\wedge B)\\wedge C",cat:"Asociatividad",
+   m:function(n){return n.op==='AND'&&n.right&&n.right.op==='AND';},
+   a:function(n){return{op:'AND',left:{op:'AND',left:n.left,right:n.right.left},right:n.right.right};}},
+  {id:"asa_l",nm:"Asociatividad (∧) (A∧B)∧C",ltx:"(A\\wedge B)\\wedge C\\equiv A\\wedge(B\\wedge C)",cat:"Asociatividad",
+   m:function(n){return n.op==='AND'&&n.left&&n.left.op==='AND';},
+   a:function(n){return{op:'AND',left:n.left.left,right:{op:'AND',left:n.left.right,right:n.right}};}},
+  {id:"aso_r",nm:"Asociatividad (∨) A∨(B∨C)",ltx:"A\\vee(B\\vee C)\\equiv(A\\vee B)\\vee C",cat:"Asociatividad",
+   m:function(n){return n.op==='OR'&&n.right&&n.right.op==='OR';},
+   a:function(n){return{op:'OR',left:{op:'OR',left:n.left,right:n.right.left},right:n.right.right};}},
+  {id:"aso_l",nm:"Asociatividad (∨) (A∨B)∨C",ltx:"(A\\vee B)\\vee C\\equiv A\\vee(B\\vee C)",cat:"Asociatividad",
+   m:function(n){return n.op==='OR'&&n.left&&n.left.op==='OR';},
+   a:function(n){return{op:'OR',left:n.left.left,right:{op:'OR',left:n.left.right,right:n.right}};}},
+  {id:"da",nm:"Distributividad ∧ sobre ∨",ltx:"A\\wedge(B\\vee C)\\equiv(A\\wedge B)\\vee(A\\wedge C)",cat:"Distributividad",
+   m:function(n){return n.op==='AND'&&n.right&&n.right.op==='OR';},
+   a:function(n){return{op:'OR',left:{op:'AND',left:n.left,right:n.right.left},right:{op:'AND',left:n.left,right:n.right.right}};}},
+  {id:"do",nm:"Distributividad ∨ sobre ∧",ltx:"A\\vee(B\\wedge C)\\equiv(A\\vee B)\\wedge(A\\vee C)",cat:"Distributividad",
+   m:function(n){return n.op==='OR'&&n.right&&n.right.op==='AND';},
+   a:function(n){return{op:'AND',left:{op:'OR',left:n.left,right:n.right.left},right:{op:'OR',left:n.left,right:n.right.right}};}},
+  {id:"ia",nm:"Idempotencia (∧)",ltx:"A\\wedge A\\equiv A",cat:"Simplificación",
+   m:function(n){return n.op==='AND'&&s(n.left)===s(n.right);},a:function(n){return n.left;}},
+  {id:"io",nm:"Idempotencia (∨)",ltx:"A\\vee A\\equiv A",cat:"Simplificación",
+   m:function(n){return n.op==='OR'&&s(n.left)===s(n.right);},a:function(n){return n.left;}},
+  {id:"aba",nm:"Absorción (∧)",ltx:"A\\wedge(A\\vee B)\\equiv A",cat:"Simplificación",
+   m:function(n){return n.op==='AND'&&n.right&&n.right.op==='OR'&&s(n.left)===s(n.right.left);},a:function(n){return n.left;}},
+  {id:"abo",nm:"Absorción (∨)",ltx:"A\\vee(A\\wedge B)\\equiv A",cat:"Simplificación",
+   m:function(n){return n.op==='OR'&&n.right&&n.right.op==='AND'&&s(n.left)===s(n.right.left);},a:function(n){return n.left;}},
+  {id:"it",nm:"Identidad (∧ con 1)",ltx:"A\\wedge 1\\equiv A",cat:"Simplificación",
+   m:function(n){return n.op==='AND'&&n.right&&n.right.op==='TRUE';},a:function(n){return n.left;}},
+  {id:"if_",nm:"Identidad (∨ con 0)",ltx:"A\\vee 0\\equiv A",cat:"Simplificación",
+   m:function(n){return n.op==='OR'&&n.right&&n.right.op==='FALSE';},a:function(n){return n.left;}},
+  {id:"dom1",nm:"Dominación (∧ con 0)",ltx:"A\\wedge 0\\equiv 0",cat:"Simplificación",
+   m:function(n){return n.op==='AND'&&n.right&&n.right.op==='FALSE';},a:function(){return{op:'FALSE'};}},
+  {id:"dom0",nm:"Dominación (∨ con 1)",ltx:"A\\vee 1\\equiv 1",cat:"Simplificación",
+   m:function(n){return n.op==='OR'&&n.right&&n.right.op==='TRUE';},a:function(){return{op:'TRUE'};}},
+  {id:"ct",nm:"Contradicción (A∧¬A)",ltx:"A\\wedge\\neg A\\equiv 0",cat:"Simplificación",
+   m:function(n){return n.op==='AND'&&areComplements(n.left,n.right);},
+   a:function(){return{op:'FALSE'};}},
+  {id:"to",nm:"Tautología (A∨¬A)",ltx:"A\\vee\\neg A\\equiv 1",cat:"Simplificación",
+   m:function(n){return n.op==='OR'&&areComplements(n.left,n.right);},
+   a:function(){return{op:'TRUE'};}},
+  {id:"remp",nm:"Quitar paréntesis",ltx:"(A)\\equiv A",cat:"Paréntesis",
+   m:function(n){return n.op==='PAREN';},
+   a:function(n){return n.inner;}},
+];
+
+/* ── Misc UI ── */
+function ins(ch){var i=document.getElementById('exi'),st=i.selectionStart,en=i.selectionEnd,v=i.value,t=ch==='('?'()':ch;i.value=v.slice(0,st)+t+v.slice(en);i.selectionStart=i.selectionEnd=st+t.length-(ch==='('?1:0);i.focus();}
+function stab(t,btn){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});document.querySelectorAll('.tab-c').forEach(function(c){c.classList.remove('on');});btn.classList.add('on');document.getElementById('tab-'+t).classList.add('on');}
+function setTog(v){showFull=v==='full';document.getElementById('tf').classList.toggle('on',showFull);document.getElementById('ts').classList.toggle('on',!showFull);if(AST)rendTT(AST);}
+function setN(v){useVF=v==='vf';document.getElementById('nvf').classList.toggle('on',useVF);document.getElementById('n10').classList.toggle('on',!useVF);if(AST)rendTT(AST);}
+function vstr(b){return b?(useVF?'V':'1'):(useVF?'F':'0');}
+function ea(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function setParbtn(v){var b=document.getElementById('parbtn');if(b)b.style.display=v?'inline-block':'none';}
+
+/* ── Tokenizer & Parser ── */
+function tok(str){
+  str=str.replace(/\s+/g,'').replace(/¬/g,'~').replace(/∧/g,'&').replace(/∨/g,'|').replace(/→/g,'>').replace(/↔/g,'=');
+  var t=[];
+  for(var i=0;i<str.length;i++){var c=str[i];
+    if(/[a-zA-Z]/.test(c)){var w=c;while(i+1<str.length&&/[a-zA-Z0-9]/.test(str[i+1]))w+=str[++i];t.push({t:'V',v:w});}
+    else if(c==='~')t.push({t:'N'});else if(c==='&')t.push({t:'A'});else if(c==='|')t.push({t:'O'});
+    else if(c==='>')t.push({t:'I'});else if(c==='=')t.push({t:'B'});
+    else if(c==='(')t.push({t:'L'});else if(c===')')t.push({t:'R'});}
+  return t;
+}
+function parse(str){
+  var toks=tok(str),pos=0;
+  function pk(){return toks[pos];}function cm(){return toks[pos++];}
+  function pB(){var l=pI();while(pk()&&pk().t==='B'){cm();l={op:'BICOND',left:l,right:pI()};}return l;}
+  function pI(){var l=pO();while(pk()&&pk().t==='I'){cm();l={op:'IMPL',left:l,right:pO()};}return l;}
+  function pO(){var l=pA();while(pk()&&pk().t==='O'){cm();l={op:'OR',left:l,right:pA()};}return l;}
+  function pA(){var l=pN();while(pk()&&pk().t==='A'){cm();l={op:'AND',left:l,right:pN()};}return l;}
+  function pN(){if(pk()&&pk().t==='N'){cm();return{op:'NOT',arg:pN()};}return pAt();}
+  function pAt(){var t=pk();if(!t)throw new Error('Expresión incompleta');
+    if(t.t==='V'){cm();return{op:'VAR',name:t.v};}
+    if(t.t==='L'){cm();var i=pB();if(!pk()||pk().t!=='R')throw new Error('Falta )');cm();return{op:'GROUP',inner:i};}
+    throw new Error('Token inesperado');}
+  function keepTypedParens(n,pop,side){
+    if(!n)return n;
+    if(n.op==='GROUP'){
+      var inner=keepTypedParens(n.inner,pop,side);
+      if(!pop)return{op:'PAREN',inner:inner};
+      return needP(pop,inner,side)?inner:{op:'PAREN',inner:inner};
+    }
+    if(n.op==='NOT')return{op:'NOT',arg:keepTypedParens(n.arg,'NOT','r')};
+    if(n.op==='IMPL'||n.op==='BICOND'||n.op==='OR'||n.op==='AND'){
+      return{op:n.op,left:keepTypedParens(n.left,n.op,'l'),right:keepTypedParens(n.right,n.op,'r')};
+    }
+    return n;
+  }
+  var r=pB();if(pos<toks.length)throw new Error('Tokens sobrantes');return keepTypedParens(r,null,null);
+}
+
+/* ── AST utilities ── */
+function gv(n){
+  var st=new Set();
+  function w(n){if(!n)return;if(n.op==='VAR'){st.add(n.name);return;}if(n.op==='PAREN'){w(n.inner);return;}if(n.op==='NOT'){w(n.arg);return;}if(n.left)w(n.left);if(n.right)w(n.right);}
+  w(n);return Array.from(st).sort();
+}
+function ev(n,env){
+  if(!n)return false;if(n.op==='VAR')return!!env[n.name];if(n.op==='TRUE')return true;if(n.op==='FALSE')return false;
+  if(n.op==='PAREN')return ev(n.inner,env);if(n.op==='NOT')return!ev(n.arg,env);
+  if(n.op==='AND')return ev(n.left,env)&&ev(n.right,env);if(n.op==='OR')return ev(n.left,env)||ev(n.right,env);
+  if(n.op==='IMPL')return!ev(n.left,env)||ev(n.right,env);if(n.op==='BICOND')return ev(n.left,env)===ev(n.right,env);
+  return false;
+}
+function s(n){
+  if(!n)return'';if(n.op==='VAR')return n.name;if(n.op==='TRUE')return'T';if(n.op==='FALSE')return'F';
+  if(n.op==='PAREN')return'P('+s(n.inner)+')';if(n.op==='NOT')return'~('+s(n.arg)+')';
+  return'('+s(n.left)+n.op+s(n.right)+')';
+}
+function snp(n){
+  if(!n)return'';if(n.op==='PAREN')return snp(n.inner);
+  if(n.op==='VAR')return n.name;if(n.op==='TRUE')return'T';if(n.op==='FALSE')return'F';
+  if(n.op==='NOT')return'~('+snp(n.arg)+')';
+  return'('+snp(n.left)+n.op+snp(n.right)+')';
+}
+function sameNoPar(a,b){return snp(a)===snp(b);}
+function isNegOf(a,b){
+  if(!a||!b)return false;
+  var x=a;
+  while(x&&x.op==='PAREN')x=x.inner;
+  return !!(x&&x.op==='NOT'&&sameNoPar(x.arg,b));
+}
+function areComplements(a,b){
+  if(isNegOf(a,b)||isNegOf(b,a))return true;
+  var vars=Array.from(new Set(gv(a).concat(gv(b))));
+  if(vars.length>6)return false;
+  var rows=Math.pow(2,vars.length);
+  for(var r=0;r<rows;r++){
+    var env={};
+    vars.forEach(function(v,i){env[v]=!!((r>>(vars.length-1-i))&1);});
+    if(ev(a,env)===ev(b,env))return false;
+  }
+  return true;
+}
+function gsub(ast){
+  var subs=[],seen=new Set();
+  function w(n,d){if(!n||isAt(n))return;var k=s(n);if(!seen.has(k)){seen.add(k);subs.push({node:n,key:k,depth:d});}
+    if(n.op==='PAREN')w(n.inner,d+1);else if(n.op==='NOT')w(n.arg,d+1);else{if(n.left)w(n.left,d+1);if(n.right)w(n.right,d+1);}}
+  w(ast,0);subs.sort(function(a,b){return a.depth-b.depth;});return subs;
+}
+
+/* ── LaTeX ── */
+function ltx(n){
+  if(!n)return'?';if(n.op==='VAR')return n.name;if(n.op==='TRUE')return'1';if(n.op==='FALSE')return'0';
+  if(n.op==='PAREN')return'\\left('+ltx(n.inner)+'\\right)';
+  if(n.op==='NOT'){var i=ltx(n.arg);return'\\neg '+(needP('NOT',n.arg,'r')?'('+i+')':i);}
+  if(n.op==='IMPL')return bltx(n.left)+' \\to '+bltx(n.right);
+  if(n.op==='BICOND')return bltx(n.left)+' \\leftrightarrow '+bltx(n.right);
+  var L=needP(n.op,n.left,'l')?'('+ltx(n.left)+')':ltx(n.left);
+  var R=needP(n.op,n.right,'r')?'('+ltx(n.right)+')':ltx(n.right);
+  if(n.op==='AND')return L+' \\wedge '+R;if(n.op==='OR')return L+' \\vee '+R;return'?';
+}
+function bltx(n){return isAt(n)?ltx(n):'['+ltx(n)+']';}
+function rk(l,d){try{return katex.renderToString(l,{throwOnError:false,displayMode:!!d});}catch(e){return ea(l);}}
+
+/* ══════════════════════════════════════════════════════
+   TOKEN FLATTENING
+   Each token: {text, cls}
+   ranges: { nodeKey → {start, end, node} } (inclusive token indices)
+   ══════════════════════════════════════════════════════ */
+function flatTokens(ast){
+  var tokens=[],ranges={},rangeList=[];
+  function push(text,cls){tokens.push({text:text,cls:cls});}
+  function walk(n){
+    if(!n)return;
+    /* Atomic — no range */
+    if(n.op==='VAR'){push(n.name,'tvar');return;}
+    if(n.op==='TRUE'){push('1','tcon1');return;}
+    if(n.op==='FALSE'){push('0','tcon0');return;}
+    var st=tokens.length;
+    var key=s(n);
+    if(n.op==='PAREN'){
+      push('(','tpar');walk(n.inner);push(')','tpar');
+    }else if(n.op==='NOT'){
+      push('¬','tuop');
+      var np=needP('NOT',n.arg,'r');
+      if(np)push('(','tpar');
+      walk(n.arg);
+      if(np)push(')','tpar');
+    }else if(n.op==='IMPL'||n.op==='BICOND'){
+      var sym=n.op==='IMPL'?'→':'↔';
+      var lb=!isAt(n.left),rb=!isAt(n.right);
+      if(lb)push('[','tbrk');walk(n.left);if(lb)push(']','tbrk');
+      push(sym,'tbop');
+      if(rb)push('[','tbrk');walk(n.right);if(rb)push(']','tbrk');
+    }else{ /* AND OR */
+      var sym=n.op==='AND'?'∧':'∨';
+      var lp=needP(n.op,n.left,'l'),rp=needP(n.op,n.right,'r');
+      if(lp)push('(','tpar');walk(n.left);if(lp)push(')','tpar');
+      push(sym,'tbop');
+      var rStart=tokens.length; /* first token of right child area (includes auto-paren if any) */
+      if(rp)push('(','tpar');walk(n.right);if(rp)push(')','tpar');
+      var rec={start:st,end:tokens.length-1,node:n,rightStart:rStart,key:key};
+      ranges[key]=rec;
+      rangeList.push(rec);
+      return; /* ranges already set, skip line below */
+    }
+    var rec2={start:st,end:tokens.length-1,node:n,key:key};
+    ranges[key]=rec2;
+    rangeList.push(rec2);
+  }
+  walk(ast);
+  return{tokens:tokens,ranges:ranges,rangeList:rangeList};
+}
+
+/* Find node whose token range EXACTLY matches [i,j].
+   Also find smallest CONTAINING node.  */
+function findForRange(rangeList,i,j){
+  var exact=null,cont=null,exactRange=null,contRange=null,contSz=Infinity;
+  rangeList.forEach(function(r){
+    if(r.start===i&&r.end===j){exact=r.node;exactRange=r;}
+    if(r.start<=i&&r.end>=j){var sz=r.end-r.start;if(sz<contSz){contSz=sz;cont=r.node;contRange=r;}}
+  });
+  return{exact:exact,cont:cont,exactRange:exactRange,contRange:contRange};
+}
+function rangeForNode(rangeList,node){
+  for(var i=0;i<rangeList.length;i++)if(rangeList[i].node===node)return rangeList[i];
+  return null;
+}
+
+/* ── Reagrupar: detect when selection = right portion of a left-assoc chain ──
+   For (A op B) op C, if user selects [B_start, C_end], offer aso_l on the outer node.
+   Also handles right-to-left: A op (B op C), if user selects [A_start, B_end], offer aso_r.  */
+function findReagrupar(rangeList,i,j){
+  /* Find smallest containing node */
+  var cont=null,contSz=Infinity;
+  rangeList.forEach(function(r){
+    if(r.start<=i&&r.end>=j){var sz=r.end-r.start;if(sz<contSz){contSz=sz;cont=r;}}
+  });
+  if(!cont)return null;
+  var N=cont.node;
+  if(N.op!=='OR'&&N.op!=='AND')return null;
+
+  /* Case 1: selection ends at N's end → possible right-grouping (aso_l) */
+  if(j===cont.end&&N.left&&N.left.op===N.op){
+    var Lr=rangeForNode(rangeList,N.left);
+    if(Lr&&Lr.rightStart!==undefined&&i===Lr.rightStart){
+      return{node:N,lawId:N.op==='OR'?'aso_l':'asa_l',dir:'right',
+             label:'Reagrupar → A '+(N.op==='OR'?'∨':'∧')+' (B '+(N.op==='OR'?'∨':'∧')+' C)'};
+    }
+  }
+
+  /* Case 2: selection starts at N's start → possible left-grouping (aso_r) */
+  if(i===cont.start&&N.right&&N.right.op===N.op){
+    var Rr=rangeForNode(rangeList,N.right);
+    if(Rr){
+      /* N.right's left child ends just before N.right's operator.
+         We need to find where N.right's left child ends.
+         N.right starts at Rr.start. Its left content ends just before its operator.
+         Approximate: find the op token inside Rr range. */
+      var opTok=-1;
+      for(var ti=Rr.start;ti<=Rr.end;ti++){
+        if(CUR_TOKENS[ti]&&CUR_TOKENS[ti].cls==='tbop'){opTok=ti;break;}
+      }
+      if(opTok>0&&j===opTok-1){
+        return{node:N,key:s(N),lawId:N.op==='OR'?'aso_r':'asa_r',dir:'left',
+               label:'Reagrupar ← (A '+(N.op==='OR'?'∨':'∧')+' B) '+(N.op==='OR'?'∨':'∧')+' C'};
+      }
+    }
+  }
+  return null;
+}
+
+function doReagrupar(){
+  if(!reagruparCandidate)return;
+  var rg=reagruparCandidate;
+  var law=null;for(var i=0;i<LAWS.length;i++){if(LAWS[i].id===rg.lawId){law=LAWS[i];break;}}
+  if(!law)return;
+  var ls=steps[steps.length-1];if(!ls)return;
+  var r=repNodeRef(ls.ast,rg.node,law);
+  if(r&&s(r)!==s(ls.ast)){
+    steps.push({ast:r,law:law.nm+' (reagrupación)'});
+    selStart=null;selEnd=null;selKey=null;reagruparCandidate=null;setParbtn(false);
+    rendProof();rendLaws();
+  }
+}
+
+/* ── Render token expression HTML ── */
+function renderTokExd(tokens,selStart,selEnd,exactRange){
+  var exStart=-1,exEnd=-1;
+  if(exactRange){exStart=exactRange.start;exEnd=exactRange.end;}
+  var isRg=!!(reagruparCandidate);
+  var html='<div class="tokexd" tabindex="0" id="tokdiv" onkeydown="tokKeydown(event)">';
+  tokens.forEach(function(tok,i){
+    var inSel=(selStart!==null&&i>=selStart&&i<=selEnd);
+    var isExact=(inSel&&exStart>=0&&selStart===exStart&&selEnd===exEnd);
+    var cls='tok '+tok.cls;
+    if(inSel){
+      if(isExact)cls+=' tok-exact';
+      else if(isRg)cls+=' tok-rg';
+      else cls+=' tok-sel';
+    }
+    html+='<span class="'+cls+'" data-i="'+i+'" onclick="tokClick('+i+')">'+ea(tok.text)+'</span>';
+  });
+  html+='</div>';
+  return html;
+}
+
+/* ── Render selection control bar ── */
+function renderSelBar(tokens,selStart,selEnd,exactNode){
+  var maxIdx=tokens.length-1;
+  var canLeft=(selStart!==null&&selStart>0);
+  var canRight=(selEnd!==null&&selEnd<maxIdx);
+  var canSnap=(selStart!==null&&!exactNode&&!reagruparCandidate);
+  var infoHtml='<span class="selinfo">Haz clic en la expresión para seleccionar</span>';
+  if(selStart!==null&&selEnd!==null){
+    if(exactNode){
+      infoHtml='<span class="selinfo valid">'+rk(ltx(exactNode))+'</span>';
+    }else if(reagruparCandidate){
+      infoHtml='<span class="selinfo rg">'+reagruparCandidate.label+'</span>';
+    }else{
+      infoHtml='<span class="selinfo partial">Expandir hasta cubrir una subexpresión</span>';
+    }
+  }
+  var html='<div class="selbar">';
+  html+='<button class="selbtn" '+(canLeft?'':'disabled')+" onclick=\"tokExpLeft()\" title=\"Expandir izquierda\">◀</button>";
+  html+=infoHtml;
+  html+='<button class="selbtn" '+(canRight?'':'disabled')+" onclick=\"tokExpRight()\" title=\"Expandir derecha\">▶</button>";
+  if(reagruparCandidate){
+    html+='<button class="rgbtn" onclick="doReagrupar()">↔ Reagrupar</button>';
+  }else if(canSnap){
+    html+='<button class="snapbtn" onclick="snapSel()">↔ Ajustar</button>';
+  }
+  html+='</div>';
+  return html;
+}
+
+/* ── Selection interaction ── */
+function tokClick(i){
+  selStart=i;selEnd=i;
+  afterSelChange();
+}
+function tokExpLeft(){
+  if(selStart===null){return;}
+  if(selStart>0){selStart--;afterSelChange();}
+}
+function tokExpRight(){
+  if(selEnd===null){return;}
+  if(selEnd<CUR_TOKENS.length-1){selEnd++;afterSelChange();}
+}
+function tokKeydown(e){
+  if(e.key==='ArrowLeft'){e.preventDefault();tokExpLeft();}
+  else if(e.key==='ArrowRight'){e.preventDefault();tokExpRight();}
+  else if(e.key==='Escape'){clearSel();}
+}
+function clearSel(){
+  selStart=null;selEnd=null;selKey=null;sugId=null;sugMode=false;reagruparCandidate=null;
+  setParbtn(false);rendProof();rendLaws();
+}
+/* Snap selection to smallest containing sub-expression */
+function snapSel(){
+  if(selStart===null)return;
+  var found=findForRange(CUR_RANGE_LIST,selStart,selEnd);
+  if(found.contRange){
+    var r=found.contRange;
+    selStart=r.start;selEnd=r.end;
+    afterSelChange();
+  }
+}
+function afterSelChange(){
+  sugId=null;sugMode=false;
+  if(selStart===null){selKey=null;reagruparCandidate=null;setParbtn(false);rendProof();rendLaws();return;}
+  /* Find exact node */
+  var found=findForRange(CUR_RANGE_LIST,selStart,selEnd);
+  var exactNode=found.exact;
+  selKey=exactNode?s(exactNode):null;
+  /* Reagrupar: only when no exact match */
+  reagruparCandidate=(!exactNode)?findReagrupar(CUR_RANGE_LIST,selStart,selEnd):null;
+  /* Show paren button only when exact non-PAREN non-atomic node */
+  setParbtn(!!(exactNode&&exactNode.op!=='PAREN'&&!isAt(exactNode)));
+  rendProof();
+  rendLaws(exactNode||null);
+}
+
+/* ── Render proof steps ── */
+function rendProof(){
+  var wrap=document.getElementById('psteps');
+  if(!steps.length){wrap.innerHTML='<div class="imsg">Ingresa una expresión y presiona Evaluar</div>';return;}
+  var html='';
+  steps.forEach(function(step,i){
+    var isLast=i===steps.length-1;
+    html+='<div class="scard'+(isLast?' on':'')+'"><div class="snum">Paso '+(i+1)+(i===0?' — Expresión original':'')+'</div>';
+    html+='<div class="slaw">'+step.law+'</div>';
+    if(isLast){
+      /* Compute tokens for this step */
+      var flat=flatTokens(step.ast);
+      CUR_TOKENS=flat.tokens;CUR_RANGES=flat.ranges;CUR_RANGE_LIST=flat.rangeList;
+      /* Determine exact node/range */
+      var exactNode=null,exactRange=null;
+      if(selStart!==null&&selEnd!==null){
+        var f=findForRange(CUR_RANGE_LIST,selStart,selEnd);
+        exactNode=f.exact;exactRange=f.exactRange;
+      }
+      html+=renderTokExd(CUR_TOKENS,selStart,selEnd,exactRange);
+      html+=renderSelBar(CUR_TOKENS,selStart,selEnd,exactNode);
+    }else{
+      /* Previous steps: simple static display */
+      html+='<div class="oldexd">'+oldRender(step.ast)+'</div>';
+    }
+    html+='</div>';
+  });
+  wrap.innerHTML=html;
+  wrap.scrollTop=wrap.scrollHeight;
+  /* Restore focus to tokdiv if it existed */
+  var td=document.getElementById('tokdiv');if(td&&selStart!==null)td.focus();
+}
+
+/* Simple static renderer for previous steps */
+function oldRender(n){
+  if(!n)return'';
+  if(n.op==='VAR')return'<span class="ov">'+n.name+'</span>';
+  if(n.op==='TRUE')return'<span style="color:#16A34A;font-weight:600;">1</span>';
+  if(n.op==='FALSE')return'<span style="color:#DC2626;font-weight:600;">0</span>';
+  if(n.op==='PAREN')return'<span class="op_">(</span>'+oldRender(n.inner)+'<span class="op_">)</span>';
+  if(n.op==='NOT'){var i=oldRender(n.arg);return'¬'+(needP('NOT',n.arg,'r')?'<span class="op_">(</span>'+i+'<span class="op_">)</span>':i);}
+  if(n.op==='IMPL'||n.op==='BICOND'){
+    var sym=n.op==='IMPL'?'→':'↔';
+    var L=isAt(n.left)?oldRender(n.left):'<span class="op_">[</span>'+oldRender(n.left)+'<span class="op_">]</span>';
+    var R=isAt(n.right)?oldRender(n.right):'<span class="op_">[</span>'+oldRender(n.right)+'<span class="op_">]</span>';
+    return L+'<span class="oo">'+sym+'</span>'+R;
+  }
+  var sym=n.op==='AND'?'∧':'∨';
+  var Lr=oldRender(n.left),Rr=oldRender(n.right);
+  var L=needP(n.op,n.left,'l')?'<span class="op_">(</span>'+Lr+'<span class="op_">)</span>':Lr;
+  var R=needP(n.op,n.right,'r')?'<span class="op_">(</span>'+Rr+'<span class="op_">)</span>':Rr;
+  return L+'<span class="oo">'+sym+'</span>'+R;
+}
+
+/* ── Laws panel ── */
+function rendLaws(target){
+  var wrap=document.getElementById('llist');var html='';
+  var cats=['Implicación','Negación','Conmutatividad','Asociatividad','Distributividad','Simplificación','Paréntesis'];
+  cats.forEach(function(cat){
+    var group=LAWS.filter(function(l){return l.cat===cat;});
+    var shown=false;
+    group.forEach(function(law){
+      var isSug=sugMode&&law.id===sugId;
+      var cls='lbtn'+(isSug?' sg':'');
+      if(!shown){html+='<div class="lsep">'+cat+'</div>';shown=true;}
+      html+='<button class="'+cls+'" onclick="apLaw(\''+law.id+'\')"><div class="lname">'+law.nm+'</div><div class="lrule">'+rk(law.ltx)+'</div></button>';
+    });
+  });
+  wrap.innerHTML=html;
+}
+
+/* ── Apply law ── */
+function apLaw(lid){
+  var law=null;for(var i=0;i<LAWS.length;i++){if(LAWS[i].id===lid){law=LAWS[i];break;}}if(!law)return;
+  var ls=steps[steps.length-1];if(!ls)return;
+  var ast=ls.ast;
+  var subs=gsub(ast);
+  function commit(na){
+    steps.push({ast:na,law:law.nm});
+    selStart=null;selEnd=null;selKey=null;sugId=null;sugMode=false;setParbtn(false);
+    rendProof();rendLaws();
+  }
+  /* 1. Selected exact node */
+  if(selStart!==null&&selEnd!==null){
+    var flat=flatTokens(ast);
+    var found=findForRange(flat.rangeList,selStart,selEnd);
+    var selNode=found.exact;
+    if(selNode&&law.m(selNode)){
+      var rSel=repNodeRef(ast,selNode,law);if(rSel){commit(rSel);return;}
+    }
+  }
+  /* 2. Root */
+  if(law.m(ast)){commit(law.a(ast));return;}
+  /* 3. Any sub */
+  for(var i=0;i<subs.length;i++){if(law.m(subs[i].node)){var r=repNodeRef(ast,subs[i].node,law);if(r){commit(r);return;}}}
+  flash('Ley no aplicable a la selección actual.');
+}
+function repNodeRef(ast,targetNode,law){
+  function walk(n){
+    if(!n)return n;
+    if(n===targetNode&&law.m(n))return law.a(n);
+    if(isAt(n))return n;
+    var c=Object.assign({},n);
+    if(n.op==='PAREN')c.inner=walk(n.inner);
+    else if(n.op==='NOT')c.arg=walk(n.arg);
+    else{c.left=walk(n.left);c.right=walk(n.right);}
+    return c;
+  }
+  return walk(ast);
+}
+
+/* ── Paréntesis explícitos ── */
+function addParen(){
+  if(selStart===null||selEnd===null)return;
+  var ls=steps[steps.length-1];if(!ls)return;
+  var ast=ls.ast;
+  var flat=flatTokens(ast);
+  var found=findForRange(flat.rangeList,selStart,selEnd);
+  var target=found.exact;
+  if(!target)return;
+  function wrap(n){
+    if(!n)return n;
+    if(n===target&&n.op!=='PAREN')return{op:'PAREN',inner:n};
+    if(isAt(n))return n;
+    var c=Object.assign({},n);
+    if(n.op==='PAREN')c.inner=wrap(n.inner);else if(n.op==='NOT')c.arg=wrap(n.arg);else{c.left=wrap(n.left);c.right=wrap(n.right);}
+    return c;
+  }
+  var newAst=wrap(ast);
+  if(s(newAst)===s(ls.ast)){flash('La selección ya tiene paréntesis.');return;}
+  steps.push({ast:newAst,law:'Paréntesis explícitos'});
+  selStart=null;selEnd=null;selKey=null;setParbtn(false);
+  rendProof();rendLaws();
+}
+
+/* ── Undo / Reset ── */
+function undo(){if(steps.length>1){steps.pop();selStart=null;selEnd=null;selKey=null;sugId=null;sugMode=false;reagruparCandidate=null;setParbtn(false);rendProof();rendLaws();}}
+function reset(){if(AST){steps=[{ast:JSON.parse(JSON.stringify(AST)),law:'Expresión inicial'}];selStart=null;selEnd=null;selKey=null;sugId=null;sugMode=false;reagruparCandidate=null;setParbtn(false);rendProof();rendLaws();}}
+
+/* ── Verificar ── */
+function chkGoal(){
+  var gr=document.getElementById('goali').value.trim();
+  var la=steps[steps.length-1].ast;
+  var wrap=document.getElementById('psteps');
+  function sm(txt,ok){var d=document.createElement('div');d.className='sbanner';d.style.cssText='background:'+(ok?'#F0FDF4':'#FEF2F2')+';border-color:'+(ok?'#86EFAC':'#FCA5A5')+';color:'+(ok?'#166534':'#991B1B')+';';d.textContent=txt;wrap.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove();},3500);}
+  if(!gr){
+    var vars=gv(la),n=vars.length,aT=true,aF=true;
+    for(var r=0;r<Math.pow(2,n);r++){var env={};vars.forEach(function(v,i){env[v]=!!((r>>(n-1-i))&1);});var val=ev(la,env);if(!val)aT=false;else aF=false;}
+    if(aT)sm('¡La expresión actual es una TAUTOLOGÍA!',true);
+    else if(aF)sm('La expresión actual es una CONTRADICCIÓN',false);
+    else sm('La expresión actual es una contingencia.',false);return;
+  }
+  try{
+    var ga=parse(gr);var av=Array.from(new Set(gv(la).concat(gv(ga)))),n=av.length,eq=true;
+    for(var r=0;r<Math.pow(2,n);r++){var env={};av.forEach(function(v,i){env[v]=!!((r>>(n-1-i))&1);});if(ev(la,env)!==ev(ga,env)){eq=false;break;}}
+    sm(eq?'¡Objetivo alcanzado! Expresiones lógicamente equivalentes.':'Aún no equivalente al objetivo.',eq);
+  }catch(e){alert('Error en expresión objetivo: '+e.message);}
+}
+
+/* ── Sugerir ── */
+function suggest(){
+  var ls=steps[steps.length-1];if(!ls)return;
+  sugMode=false;sugId=null;
+  var ast=ls.ast,subs=gsub(ast);
+  var pri=['impl','bic','dn','dm1','dm2','da','do','ia','io','aba','abo','ct','to'];
+  for(var pi=0;pi<pri.length;pi++){
+    var law=null;for(var j=0;j<LAWS.length;j++){if(LAWS[j].id===pri[pi]){law=LAWS[j];break;}}if(!law)continue;
+    /* Try root */
+    if(law.m(ast)){
+      sugMode=true;sugId=pri[pi];var r=CUR_RANGES[s(ast)];
+      if(r){selStart=r.start;selEnd=r.end;selKey=s(ast);}
+      setParbtn(false);rendProof();rendLaws(ast);return;
+    }
+    /* Try subs */
+    for(var i=0;i<subs.length;i++){
+      if(law.m(subs[i].node)){
+        sugMode=true;sugId=pri[pi];var r=CUR_RANGES[subs[i].key];
+        if(r){selStart=r.start;selEnd=r.end;selKey=subs[i].key;}
+        setParbtn(false);rendProof();rendLaws(subs[i].node);return;
+      }
+    }
+  }
+  sugMode=false;
+  flash('No se encontró sugerencia automática.');
+}
+
+function flash(msg){var wrap=document.getElementById('psteps');var d=document.createElement('div');d.style.cssText='padding:5px 12px;color:#B45309;font-size:11px;font-style:italic;';d.textContent=msg;wrap.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove();},2200);}
+
+/* ── Truth table ── */
+function rendTT(ast){
+  var vars=gv(ast),n=vars.length,rows=Math.pow(2,n);
+  var subs=showFull?gsub(ast).slice().reverse():[];
+  var html='<table class="tt"><thead><tr>';
+  vars.forEach(function(v){html+='<th class="vc">'+rk(v)+'</th>';});
+  if(showFull)subs.forEach(function(sub){html+='<th class="sc">'+rk(ltx(sub.node))+'</th>';});
+  html+='<th class="mc">'+rk(ltx(ast))+'</th></tr></thead><tbody>';
+  var allT=true,allF=true;
+  for(var r=0;r<rows;r++){
+    var env={};vars.forEach(function(v,i){env[v]=!!((r>>(n-1-i))&1);});
+    html+='<tr>';
+    vars.forEach(function(v){var b=env[v];html+='<td class="'+(b?'vT':'vF')+'">'+vstr(b)+'</td>';});
+    if(showFull)subs.forEach(function(sub){var b=ev(sub.node,env);html+='<td class="'+(b?'vT':'vF')+'">'+vstr(b)+'</td>';});
+    var main=ev(ast,env);html+='<td class="'+(main?'vT':'vF')+'">'+vstr(main)+'</td>';
+    if(!main)allT=false;else allF=false;html+='</tr>';
+  }
+  html+='</tbody></table>';
+  document.getElementById('ttwrap').innerHTML=html;
+  var badge=document.getElementById('tbadge');
+  if(allT)badge.innerHTML='<span class="tbadge tbT">Tautología — siempre 1</span>';
+  else if(allF)badge.innerHTML='<span class="tbadge tbF">Contradicción — siempre 0</span>';
+  else badge.innerHTML='<span class="tbadge tbC">Contingencia</span>';
+}
+
+/* ── Init ── */
+function initProof(ast){
+  steps=[{ast:JSON.parse(JSON.stringify(ast)),law:'Expresión inicial'}];
+  selStart=null;selEnd=null;selKey=null;sugId=null;sugMode=false;setParbtn(false);
+  document.getElementById('pgex').innerHTML=rk(ltx(ast));
+  /* Pre-compute tokens so suggest() can work before first rendProof */
+  var flat=flatTokens(ast);CUR_TOKENS=flat.tokens;CUR_RANGES=flat.ranges;CUR_RANGE_LIST=flat.rangeList;
+  rendProof();rendLaws();
+}
+function go(){
+  var raw=document.getElementById('exi').value.trim();
+  document.getElementById('em').textContent='';
+  try{var ast=parse(raw);AST=ast;rendTT(ast);initProof(ast);}
+  catch(e){document.getElementById('em').textContent='✕ '+e.message;}
+}
+document.getElementById('exi').addEventListener('keydown',function(e){if(e.key==='Enter')go();});
+go();
+</script>
+
+
+
