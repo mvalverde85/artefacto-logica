@@ -1,0 +1,15 @@
+export type ToolType =
+  | 'pointer'
+  | 'hand'
+  | 'eraser'
+  | 'pen'
+  | 'line'
+  | 'polyline'
+  | 'bezier'
+  | 'connector'
+  | 'shape'
+  | 'text'
+  | 'stickyNote'
+  | 'formula'
+  | 'graph'
+  | 'image';
