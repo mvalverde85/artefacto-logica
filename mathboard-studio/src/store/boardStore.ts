@@ -49,6 +49,13 @@ interface BoardState {
 
   setSelectedIds: (ids: string[]) => void;
   clearSelection: () => void;
+  selectAll: () => void;
+  deleteSelected: () => void;
+
+  clipboard: BoardElement[];
+  copySelected: () => void;
+  cutSelected: () => void;
+  pasteClipboard: () => void;
 
   undo: () => void;
   redo: () => void;
@@ -81,6 +88,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   history: [{ elements: [] }],
   historyIndex: 0,
   saveStatus: 'saved',
+  clipboard: [],
 
   setTitle: (title) => set((s) => ({ board: { ...s.board, title } })),
   setBackground: (bg) => set((s) => ({ board: { ...s.board, background: bg } })),
@@ -129,6 +137,30 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
   setSelectedIds: (ids) => set({ selectedIds: ids }),
   clearSelection: () => set({ selectedIds: [] }),
+  selectAll: () => set((s) => ({ selectedIds: s.board.elements.map((e) => e.id) })),
+  deleteSelected: () => get().removeElements(get().selectedIds),
+
+  copySelected: () => {
+    const { board, selectedIds } = get();
+    set({ clipboard: board.elements.filter((e) => selectedIds.includes(e.id)).map((e) => JSON.parse(JSON.stringify(e))) });
+  },
+
+  cutSelected: () => {
+    get().copySelected();
+    get().removeElements(get().selectedIds);
+  },
+
+  pasteClipboard: () => {
+    const { clipboard, addElement, board } = get();
+    if (clipboard.length === 0) return;
+    const newIds: string[] = [];
+    clipboard.forEach((el) => {
+      const newEl = { ...JSON.parse(JSON.stringify(el)), id: generateId(), x: el.x + 20, y: el.y + 20, zIndex: board.elements.length + 1 };
+      addElement(newEl);
+      newIds.push(newEl.id);
+    });
+    set({ selectedIds: newIds });
+  },
 
   pushHistory: () => {
     const { board, history, historyIndex } = get();
