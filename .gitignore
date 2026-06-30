@@ -1,2 +1,5 @@
 *.bak
 *.bak_*
+
+mathboard-studio/node_modules/
+mathboard-studio/dist/
